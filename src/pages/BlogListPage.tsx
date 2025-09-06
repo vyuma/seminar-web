@@ -21,17 +21,14 @@ const BlogListPage: React.FC = () => {
         <List component="nav">
           {sortedPosts.map((post, index) => (
             <React.Fragment key={post.id}>
-              <ListItem 
-                button 
-                component={RouterLink} 
-                to={`/post/${post.slug}`}
-              >
-                <ListItemText
-                  primary={<Typography variant="h6">{post.title}</Typography>}
-                  secondary={`${post.date} - ${post.excerpt}`}
-                />
-              </ListItem>
-              {index < sortedPosts.length - 1 && <Divider />}
+                          <ListItem disablePadding>
+                            <ListItemButton component={RouterLink} to={`/post/${post.slug}`}>
+                              <ListItemText
+                                primary={<Typography variant="h6">{post.title}</Typography>}
+                                secondary={`${post.date} - ${post.excerpt}`}
+                              />
+                            </ListItemButton>
+                          </ListItem>              {index < sortedPosts.length - 1 && <Divider />}
             </React.Fragment>
           ))}
         </List>

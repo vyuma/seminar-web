@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardContent, CardActionArea, Typography, Box, Chip } from '@mui/material';
-import { Seminar } from '../mockData';
+import { type Seminar } from '../mockData';
 
 interface SeminarCardProps {
   seminar: Seminar;

@@ -12,15 +12,13 @@ const BlogPreview: React.FC = () => {
       <List component="nav" aria-label="main mailbox folders">
         {latestPosts.map((post, index) => (
           <React.Fragment key={post.id}>
-            <ListItem 
-              button 
-              component={RouterLink} 
-              to={`/post/${post.slug}`}
-            >
-              <ListItemText
-                primary={<Typography variant="h6">{post.title}</Typography>}
-                secondary={`${post.date} - ${post.excerpt}`}
-              />
+            <ListItem disablePadding>
+              <ListItemButton component={RouterLink} to={`/post/${post.slug}`}>
+                <ListItemText
+                  primary={<Typography variant="h6">{post.title}</Typography>}
+                  secondary={`${post.date} - ${post.excerpt}`}
+                />
+              </ListItemButton>
             </ListItem>
             {index < latestPosts.length - 1 && <Divider />}
           </React.Fragment>

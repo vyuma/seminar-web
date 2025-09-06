@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Grid } from '@mui/material';
-import { seminars, Seminar } from '../mockData';
+import { seminars, type Seminar } from '../mockData';
 import SeminarCard from './SeminarCard';
 import SeminarDetailModal from './SeminarDetailModal';
 
@@ -25,7 +25,7 @@ const SeminarList: React.FC = () => {
     <>
       <Grid container spacing={3}>
         {latestSeminars.map((seminar) => (
-          <Grid item xs={12} sm={6} md={3} key={seminar.id}>
+          <Grid item={true} xs={12} sm={6} md={3} key={seminar.id}>
             <SeminarCard seminar={seminar} onClick={() => handleCardClick(seminar)} />
           </Grid>
         ))}
