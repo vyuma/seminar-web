@@ -3,8 +3,12 @@ import { useParams } from 'react-router-dom';
 import { Container, Typography, CircularProgress, Box } from '@mui/material';
 import MarkdownRenderer from '../components/MarkdownRenderer';
 
-// Vite feature to import all markdown files from a directory
-const markdownModules = import.meta.glob('../content/*.md', { as: 'raw' });
+// Vite 5: use query + import
+const markdownModules: Record<string, () => Promise<unknown>> =
+  import.meta.glob('../content/*.md', {
+    query: '?raw',
+    import: 'default',
+  });
 
 const MarkdownPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -16,23 +20,29 @@ const MarkdownPage: React.FC = () => {
     const loadContent = async () => {
       setLoading(true);
       setError('');
-      const path = `../content/${slug}.md`;
-      if (markdownModules[path]) {
-        try {
-          const moduleContent = await markdownModules[path]();
-          setContent(moduleContent);
-        } catch (e) {
-          setError('Could not load content.');
-        }
-      } else {
+
+      // ざっくりサニタイズ（任意）
+      const safe = (slug ?? '').replace(/[^a-zA-Z0-9-_]/g, '');
+      const path = `../content/${safe}.md`;
+
+      const loader = markdownModules[path];
+      if (!loader) {
         setError('Page not found.');
+        setLoading(false);
+        return;
       }
-      setLoading(false);
+
+      try {
+        const raw = await loader(); // string を受け取る
+        setContent(raw as string);
+      } catch {
+        setError('Could not load content.');
+      } finally {
+        setLoading(false);
+      }
     };
 
-    if (slug) {
-      loadContent();
-    }
+    if (slug) loadContent();
   }, [slug]);
 
   return (

@@ -1,5 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { Container, Typography, Box, Grid, Chip, TextField } from '@mui/material';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
+import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid'; // v7: Grid v2
 import { seminars, type Seminar } from '../mockData';
 import SeminarCard from '../components/SeminarCard';
 import SeminarDetailModal from '../components/SeminarDetailModal';
@@ -10,52 +15,28 @@ const SeminarListPage: React.FC = () => {
   const [selectedSeminar, setSelectedSeminar] = useState<Seminar | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  // Memoize the calculation of all unique tags
   const allTags = useMemo(() => {
     const tags = new Set<string>();
-    seminars.forEach(seminar => {
-      seminar.tags.forEach(tag => tags.add(tag));
-    });
+    seminars.forEach((seminar) => seminar.tags.forEach((tag) => tags.add(tag)));
     return Array.from(tags);
   }, []);
 
-  // Memoize the filtering logic to avoid re-calculation on every render
   const filteredSeminars = useMemo(() => {
-    const lowercasedSearchTerm = searchTerm.toLowerCase();
-
-    // Start with the full list
-    return seminars.filter(seminar => {
-      // Check if the seminar matches the search term (in title or description)
-      const matchesSearch = lowercasedSearchTerm === '' ? true : 
-        seminar.title.toLowerCase().includes(lowercasedSearchTerm) ||
-        seminar.description.toLowerCase().includes(lowercasedSearchTerm);
-
-      // Check if the seminar has all of the selected tags
-      const matchesTags = selectedTags.length === 0 ? true : 
-        selectedTags.every(tag => seminar.tags.includes(tag));
-
+    const q = searchTerm.trim().toLowerCase();
+    return seminars.filter((seminar) => {
+      const matchesSearch =
+        q === '' ||
+        seminar.title.toLowerCase().includes(q) ||
+        seminar.description.toLowerCase().includes(q);
+      const matchesTags =
+        selectedTags.length === 0 || selectedTags.every((tag) => seminar.tags.includes(tag));
       return matchesSearch && matchesTags;
     });
   }, [searchTerm, selectedTags]);
 
-  const handleTagClick = (tag: string) => {
-    setSelectedTags(prev => 
-      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
-    );
-  };
-
-  const handleCardClick = (seminar: Seminar) => {
-    setSelectedSeminar(seminar);
-    setModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
-    setSelectedSeminar(null);
-  };
-
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
+      {/* Header */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h3" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
           ゼミ一覧
@@ -65,9 +46,9 @@ const SeminarListPage: React.FC = () => {
         </Typography>
       </Box>
 
-      {/* Filter Controls */}
-      <Box sx={{ mb: 4, p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2 }}>
-        <TextField 
+      {/* Filter / Search */}
+      <Box sx={{ mb: 4, p: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2, bgcolor: 'background.paper' }}>
+        <TextField
           fullWidth
           variant="outlined"
           label="キーワード検索 (タイトル、説明)..."
@@ -76,39 +57,60 @@ const SeminarListPage: React.FC = () => {
           sx={{ mb: 2 }}
         />
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-          <Typography variant="subtitle2" sx={{ mr: 1, alignSelf: 'center' }}>タグで絞り込み:</Typography>
-          {allTags.map(tag => (
-            <Chip 
+          <Typography variant="subtitle2" sx={{ mr: 1, alignSelf: 'center' }}>
+            タグで絞り込み:
+          </Typography>
+          {allTags.map((tag) => (
+            <Chip
               key={tag}
               label={tag}
-              onClick={() => handleTagClick(tag)}
+              onClick={() =>
+                setSelectedTags((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]))
+              }
               color={selectedTags.includes(tag) ? 'primary' : 'default'}
               variant={selectedTags.includes(tag) ? 'filled' : 'outlined'}
               clickable
+              sx={{ borderRadius: 1.5 }}
             />
           ))}
         </Box>
       </Box>
 
-      {/* Seminar List */}
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', mx: -1.5 }}>
-        {filteredSeminars.map((seminar) => (
-          <Box 
-            key={seminar.id}
-            sx={{ 
-              p: 1.5, 
-              width: { xs: '100%', sm: '50%', md: '33.3333%' } 
-            }}
-          >
-            <SeminarCard seminar={seminar} onClick={() => handleCardClick(seminar)} />
-          </Box>
-        ))}
-      </Box>
+      <Box
+          sx={{
+            display: 'grid',
+            gap: 3,
+            gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, // sm以上で常に2列
+          }}
+        >
+          {filteredSeminars.length === 0 ? (
+            <Box sx={{ gridColumn: '1 / -1', p: 6, textAlign: 'center', border: '1px dashed', borderColor: 'divider', borderRadius: 2 }}>
+              <Typography variant="h6" gutterBottom>該当するゼミが見つかりませんでした</Typography>
+              <Typography color="text.secondary">検索条件やタグを変更して、もう一度お試しください。</Typography>
+            </Box>
+          ) : (
+            filteredSeminars.map((seminar) => (
+              <Box key={seminar.id}>
+                <SeminarCard
+                  seminar={seminar}
+                  onClick={() => {
+                    setSelectedSeminar(seminar);
+                    setModalOpen(true);
+                  }}
+                />
+              </Box>
+            ))
+          )}
+        </Box>
 
-      <SeminarDetailModal 
+
+      <SeminarDetailModal
         seminar={selectedSeminar}
         open={modalOpen}
-        onClose={handleCloseModal}
+        onClose={() => {
+          setModalOpen(false);
+          setSelectedSeminar(null);
+        }}
       />
     </Container>
   );
