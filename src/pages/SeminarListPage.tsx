@@ -4,7 +4,6 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid'; // v7: Grid v2
 import { seminars, type Seminar } from '../mockData';
 import SeminarCard from '../components/SeminarCard';
 import SeminarDetailModal from '../components/SeminarDetailModal';
