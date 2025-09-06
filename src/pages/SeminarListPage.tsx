@@ -91,13 +91,19 @@ const SeminarListPage: React.FC = () => {
       </Box>
 
       {/* Seminar List */}
-      <Grid container spacing={3}>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', mx: -1.5 }}>
         {filteredSeminars.map((seminar) => (
-          <Grid item={true} xs={12} sm={6} md={4} key={seminar.id}>
+          <Box 
+            key={seminar.id}
+            sx={{ 
+              p: 1.5, 
+              width: { xs: '100%', sm: '50%', md: '33.3333%' } 
+            }}
+          >
             <SeminarCard seminar={seminar} onClick={() => handleCardClick(seminar)} />
-          </Grid>
+          </Box>
         ))}
-      </Grid>
+      </Box>
 
       <SeminarDetailModal 
         seminar={selectedSeminar}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid } from '@mui/material';
+import { Box } from '@mui/material';
 import { seminars, type Seminar } from '../mockData';
 import SeminarCard from './SeminarCard';
 import SeminarDetailModal from './SeminarDetailModal';
@@ -23,13 +23,19 @@ const SeminarList: React.FC = () => {
 
   return (
     <>
-      <Grid container spacing={3}>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', mx: -1.5 }}>
         {latestSeminars.map((seminar) => (
-          <Grid item={true} xs={12} sm={6} md={3} key={seminar.id}>
+          <Box 
+            key={seminar.id}
+            sx={{ 
+              p: 1.5, 
+              width: { xs: '100%', sm: '50%', md: '25%' } 
+            }}
+          >
             <SeminarCard seminar={seminar} onClick={() => handleCardClick(seminar)} />
-          </Grid>
+          </Box>
         ))}
-      </Grid>
+      </Box>
       <SeminarDetailModal 
         seminar={selectedSeminar}
         open={modalOpen}
