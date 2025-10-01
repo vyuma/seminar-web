@@ -16,7 +16,23 @@ const HomePage: React.FC = () => {
         </Typography>
       </Box>
 
+
       <Divider sx={{ my: 4 }} />
+
+      {/* imageの貼り付け */}
+      <Box sx={{ my: 4 }}>
+        <img src="src/assets/image.png" alt="全国自主ゼミの会" style={{ width: '100%', borderRadius: '8px' }} />
+      </Box>
+
+      {/* Seminars Section */}
+      <Box sx={{ my: 4 }}>
+        <Typography variant="h4" component="h2" gutterBottom>
+          全国自主ゼミサークルとは
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          全国自主ゼミサークルは、全国の学生が自主的に集まり、学び合うためのコミュニティです。
+        </Typography>
+      </Box>
 
       {/* Seminars Section */}
       <Box sx={{ my: 4 }}>
