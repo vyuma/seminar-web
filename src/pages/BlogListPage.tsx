@@ -28,7 +28,8 @@ const BlogListPage: React.FC = () => {
                                 secondary={`${post.date} - ${post.excerpt}`}
                               />
                             </ListItemButton>
-                          </ListItem>              {index < sortedPosts.length - 1 && <Divider />}
+                          </ListItem>              
+                          {index < sortedPosts.length - 1 && <Divider />}
             </React.Fragment>
           ))}
         </List>

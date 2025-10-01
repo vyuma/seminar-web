@@ -9,10 +9,10 @@ const HomePage: React.FC = () => {
       {/* Hero Section */}
       <Box sx={{ my: 4, textAlign: 'center' }}>
         <Typography variant="h2" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
-          全国自主ゼミの会
+          全国自主ゼミサークルの会
         </Typography>
         <Typography variant="h5" color="text.secondary">
-          全国自主ゼミへようこうそ
+          全国自主ゼミサークルへようこそ
         </Typography>
       </Box>
 
